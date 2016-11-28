@@ -7,7 +7,7 @@ import React, {
 } from 'react';
 import {
   StyleSheet,
-  View,
+  View
 } from 'react-native';
 import PureComponent from '../utils/PureComponent';
 import StaticContainer from 'react-static-container';
@@ -65,6 +65,8 @@ type Props = {
   navigatorUID: string,
   initialTab: string,
   renderTabBar: (props: Object) => React.Element<{}>,
+  playerBar?: Function,
+  bottomPosition?: number,
   tabBarHeight?: number,
   tabBarColor?: string,
   tabBarStyle?: any,
@@ -142,6 +144,7 @@ class ExNavigationTab extends PureComponent<any, Props, State> {
       items: this.state.tabItems,
       height: this.props.tabBarHeight,
       translucent: this.props.translucent,
+      bottom: this.props.bottomPosition,
       style: [
         this.props.tabBarStyle,
         this.props.tabBarColor ? {backgroundColor: this.props.tabBarColor} : {},
@@ -153,11 +156,11 @@ class ExNavigationTab extends PureComponent<any, Props, State> {
     // Get the tab bar's height from a static property on the class
     const tabBarHeight =  this.props.tabBarHeight || TabBarComponent.defaultHeight || 0;
     const isTranslucent = this.props.translucent;
-
     return (
       <View style={styles.container}>
         <View style={{flex: 1, marginBottom: isTranslucent ? 0 : tabBarHeight}}>
-          {this.renderTabs()}
+           {this.renderTabs()}
+           {this.props.playerBar}
         </View>
         {tabBar}
       </View>
