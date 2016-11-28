@@ -6,6 +6,7 @@ import {
   TouchableNativeFeedback,
   Text,
   View,
+  Animated
 } from 'react-native';
 
 import { unsupportedNativeView } from '../ExUnsupportedNativeView';
@@ -26,22 +27,38 @@ const DEFAULT_TAB_BAR_HEIGHT = 56;
 export default class ExNavigationTabBar extends React.Component {
   static defaultHeight = DEFAULT_TAB_BAR_HEIGHT;
 
+  state = {
+    bottom: new Animated.Value(0)
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.bottom < 0) {
+     this.state.bottom.setValue(nextProps.bottom)
+    }
+  }
+
+  getPosition() {
+    return {
+      bottom: this.state.bottom
+    }
+  }
+
   render() {
     const height = this.props.height || DEFAULT_TAB_BAR_HEIGHT;
     let isTranslucent = this.props.translucent;
     let backgroundColor = isTranslucent ? 'rgba(255,255,255,0.5)' : '#fefefe';
 
     return (
-      <View style={[styles.container, {height}]}>
+      <Animated.View style={[styles.container, { height }, , this.getPosition()]}>
         {isTranslucent &&
-          <Components.BlurView style={[styles.translucentUnderlay, {height}]} />}
+          <Components.BlurView style={[styles.translucentUnderlay, { height }]} />}
 
-        <View style={[styles.innerContainer, {backgroundColor}, this.props.style]}>
+        <View style={[styles.innerContainer, { backgroundColor }, this.props.style]}>
           <View style={styles.itemContainer}>
             {this.renderTabItems()}
           </View>
         </View>
-      </View>
+      </Animated.View>
     );
   }
 
